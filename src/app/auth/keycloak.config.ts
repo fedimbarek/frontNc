@@ -4,7 +4,7 @@ let keycloak: Keycloak;
 
 export function initKeycloak(): Promise<boolean> {
   keycloak = new Keycloak({
-    url: 'http://localhost:8085',
+    url: 'https://thanks-bidding-arrangements-step.trycloudflare.com',
     realm: 'jungleinenglish-realm',
     clientId: 'jungleinenglish-frontend'
   });
