@@ -1,0 +1,745 @@
+// ── Variables ─────────────────────────────────────────────────
+$primary:       #0ea37a;
+$primary-hover: #0c8a68;
+$primary-light: rgba(14, 163, 122, 0.10);
+$primary-dim:   rgba(14, 163, 122, 0.18);
+$primary-glow:  rgba(14, 163, 122, 0.25);
+$txt1:          #1F2937;
+$txt2:          #6B7280;
+$txt3:          #9CA3AF;
+$bg1:           #FFFFFF;
+$bg2:           #F9FAFB;
+$bg3:           #F3F4F6;
+$border:        #E5E7EB;
+$success:       #10B981;
+$danger:        #EF4444;
+$danger-light:  rgba(239, 68, 68, 0.08);
+$sh-sm:         0 1px 3px rgba(0,0,0,.06);
+$sh-md:         0 4px 12px rgba(0,0,0,.08);
+$sh-lg:         0 12px 30px rgba(0,0,0,.10);
+$sh-green:      0 6px 20px rgba(14,163,122,.25);
+
+// ── Base ──────────────────────────────────────────────────────
+.reservation-page {
+  min-height: 100vh;
+  background: $bg2;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: $txt1;
+}
+
+// ── Hero ──────────────────────────────────────────────────────
+.page-hero {
+  position: relative;
+  padding: 3rem 2.5rem 2.5rem;
+  overflow: hidden;
+  background: $txt1;
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba($primary, .18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba($primary, .10) 0%, transparent 60%);
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,.025) 40px, rgba(255,255,255,.025) 41px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,.025) 40px, rgba(255,255,255,.025) 41px);
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: $primary-dim;
+    color: lighten($primary, 20%);
+    border: 1px solid rgba($primary, .3);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.3rem 0.85rem;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #fff;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.03em;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,.55);
+    margin: 0 0 1.25rem;
+  }
+}
+
+// ── Bouton Mes Réservations ────────────────────────────────────
+.btn-my-reservations {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.9);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .18s, border-color .18s;
+
+  &:hover {
+    background: rgba(255,255,255,.18);
+    border-color: rgba(255,255,255,.4);
+  }
+}
+
+// ── Steps Bar ─────────────────────────────────────────────────
+.steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 2rem;
+  background: $bg1;
+  border-bottom: 1px solid $border;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.4;
+  transition: opacity .3s;
+
+  &.active, &.done { opacity: 1; }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid $border;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $txt2;
+    background: $bg1;
+    transition: all .3s;
+  }
+
+  .step-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $txt2;
+    transition: color .3s;
+  }
+
+  &.active {
+    .step-num { border-color: $primary; color: $primary; background: $primary-light; }
+    .step-label { color: $primary; }
+  }
+
+  &.done {
+    .step-num { background: $primary; border-color: $primary; color: #fff; }
+    .step-label { color: $txt1; }
+  }
+}
+
+.step-line {
+  width: 60px;
+  height: 2px;
+  background: $border;
+  margin: 0 0.5rem;
+  border-radius: 2px;
+  transition: background .3s;
+  flex-shrink: 0;
+  &.done { background: $primary; }
+  @media (max-width: 480px) { width: 30px; }
+}
+
+// ── Mes Réservations Section ──────────────────────────────────
+.my-reservations-section {
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
+  padding: 0 2rem;
+  animation: fadeUp .3s ease;
+
+  @media (max-width: 900px) { padding: 0 1rem; }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: $txt1;
+    margin: 0;
+  }
+
+  .reserv-count {
+    background: $primary;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+  }
+}
+
+.btn-close-section {
+  background: none;
+  border: 1px solid $border;
+  border-radius: 7px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  color: $txt2;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+  &:hover { background: $bg3; }
+}
+
+.reserv-empty {
+  background: $bg1;
+  border: 1px dashed $border;
+  border-radius: 12px;
+  padding: 2.5rem;
+  text-align: center;
+  color: $txt3;
+  margin-bottom: 1.5rem;
+
+  .empty-illo { font-size: 2rem; margin-bottom: 0.5rem; }
+  p { font-size: 0.875rem; margin: 0; }
+}
+
+.reserv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.reserv-card {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: $sh-sm;
+  transition: box-shadow .2s;
+  animation: fadeUp .25s ease both;
+  flex-wrap: wrap;
+
+  &:hover { box-shadow: $sh-md; }
+
+  // Réservation passée → grisée
+  &.passed {
+    opacity: 0.55;
+    background: $bg2;
+    border-style: dashed;
+  }
+
+  .reserv-card-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .reserv-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: $primary-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .reserv-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .reserv-terrain {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $txt1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .reserv-date {
+    font-size: 0.75rem;
+    color: $txt3;
+    font-weight: 500;
+  }
+
+  .reserv-card-center {
+    flex-shrink: 0;
+  }
+
+  .reserv-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: $primary-light;
+    color: $primary-hover;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .reserv-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+}
+
+// ── Badges status ─────────────────────────────────────────────
+.reserv-status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &.active {
+    background: $primary-light;
+    color: $primary-hover;
+  }
+
+  &.passed {
+    background: $bg3;
+    color: $txt3;
+  }
+}
+
+// ── Bouton Annuler ────────────────────────────────────────────
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  background: $danger-light;
+  color: $danger;
+  border: 1px solid rgba($danger, .25);
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s, border-color .15s;
+
+  &:hover:not(:disabled) {
+    background: rgba($danger, .15);
+    border-color: rgba($danger, .4);
+  }
+
+  // ⛔ Bloqué : moins de 2h ou autre condition
+  &.blocked, &:disabled {
+    background: $bg3;
+    color: $txt3;
+    border-color: $border;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.cancel-blocked-reason {
+  font-size: 0.68rem;
+  color: $txt3;
+  font-weight: 500;
+  text-align: right;
+  max-width: 160px;
+}
+
+// ── Page Body ─────────────────────────────────────────────────
+.page-body {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.75rem 2rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    padding: 1.25rem 1rem;
+  }
+}
+
+// ── Clubs Panel ───────────────────────────────────────────────
+.clubs-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .panel-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: $txt1;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .club-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $primary;
+    background: $primary-light;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+  }
+}
+
+.clubs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.club-block {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: $sh-sm;
+  animation: fadeUp .3s ease both;
+}
+
+.club-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+
+  .club-dot { width: 8px; height: 8px; border-radius: 50%; background: $primary; flex-shrink: 0; }
+  .club-title { font-size: 1rem; font-weight: 700; color: $txt1; flex: 1; }
+  .club-hours { font-size: 0.75rem; color: $txt3; background: $bg3; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 500; }
+}
+
+// ── Terrain Cards ─────────────────────────────────────────────
+.terrains-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.terrain-card {
+  width: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: $sh-sm;
+  background: $bg1;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+
+  &:hover { transform: translateY(-4px); box-shadow: $sh-md; border-color: rgba($primary, .4); }
+  &.selected { border-color: $primary; box-shadow: $sh-green; .terrain-img-wrap::after { opacity: 1; } }
+  @media (max-width: 600px) { width: 140px; }
+}
+
+.terrain-img-wrap {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba($primary, .15);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+
+  .terrain-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba($txt1,.6) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .overlay-icon { font-size: 1.5rem; }
+  }
+
+  .terrain-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: $primary;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    z-index: 2;
+    animation: popIn .2s ease;
+  }
+}
+
+.terrain-card:hover .terrain-img-wrap img { transform: scale(1.06); }
+.terrain-card:hover .terrain-img-wrap .terrain-overlay { opacity: 1; }
+
+.terrain-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.75rem;
+
+  .terrain-name { font-size: 0.9rem; font-weight: 700; color: $txt1; }
+  .terrain-price {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: $primary;
+    em { font-size: 0.7rem; font-style: normal; color: $txt3; font-weight: 500; }
+  }
+}
+
+// ── Booking Panel ─────────────────────────────────────────────
+.booking-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 1.5rem;
+  align-self: flex-start;
+  @media (max-width: 900px) { position: static; }
+}
+
+.selected-recap {
+  background: $bg1;
+  border: 1px solid $border;
+  border-left: 3px solid $primary;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: $sh-sm;
+  animation: slideIn .25s ease;
+
+  .recap-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .recap-info { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; }
+  .recap-label { font-size: 0.7rem; color: $txt3; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .recap-value { font-size: 0.95rem; font-weight: 700; color: $txt1; }
+  .recap-reset {
+    background: none;
+    border: none;
+    color: $txt3;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: color .15s, background .15s;
+    line-height: 1;
+    &:hover { color: $danger; background: $danger-light; }
+  }
+}
+
+.empty-booking {
+  background: $bg1;
+  border: 1px dashed $border;
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: $txt3;
+  .empty-illo { font-size: 2rem; margin-bottom: 0.75rem; }
+  p { font-size: 0.875rem; margin: 0; }
+}
+
+.date-block {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.1rem;
+  box-shadow: $sh-sm;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.block-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $txt2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.1rem;
+
+  .slots-count {
+    background: $primary;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 20px;
+    margin-left: 0.25rem;
+  }
+}
+
+.date-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid $border;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: $txt1;
+  background: $bg2;
+  outline: none;
+  font-family: inherit;
+  transition: border-color .15s, box-shadow .15s;
+  &:focus { border-color: $primary; box-shadow: 0 0 0 3px $primary-light; background: $bg1; }
+}
+
+.slots-block {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.1rem;
+  box-shadow: $sh-sm;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: fadeUp .25s ease;
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.slot-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.5rem;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  background: $bg1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .18s;
+  animation: popIn .2s ease both;
+
+  .slot-time { font-size: 0.82rem; font-weight: 700; color: $txt1; }
+  .slot-sep { font-size: 0.7rem; color: $txt3; }
+
+  &:hover {
+    border-color: $primary;
+    background: $primary-light;
+    box-shadow: 0 0 0 3px $primary-light;
+    transform: translateY(-1px);
+    .slot-time { color: $primary; }
+    .slot-sep  { color: $primary; }
+  }
+
+  &:active { transform: scale(.97); }
+}
+
+.slots-loading {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.25rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+
+  .pulse-bar {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, $primary-light, $primary, $primary-light);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+  }
+
+  span { font-size: 0.8rem; color: $txt3; }
+}
+
+.no-slots {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  .no-slots-illo { font-size: 2rem; margin-bottom: 0.5rem; }
+  p   { font-size: 0.9rem; font-weight: 600; color: $txt1; margin: 0 0 0.3rem; }
+  span { font-size: 0.8rem; color: $txt3; }
+}
+
+// ── Animations ────────────────────────────────────────────────
+@keyframes fadeUp  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
+@keyframes popIn   { from { opacity:0; transform:scale(.88); }        to { opacity:1; transform:scale(1); } }
+@keyframes shimmer { 0%,100% { background-position:200% 0; } 50% { background-position:0% 0; } }

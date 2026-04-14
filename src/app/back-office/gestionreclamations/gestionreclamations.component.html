@@ -1,0 +1,483 @@
+<div class="reclamations-container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Gestion des Réclamations
+      </h1>
+      <p class="page-subtitle">Gérez les réclamations et leurs réponses</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-stats" (click)="toggleStats()" [class.active]="showStats">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 20V10M12 20V4M6 20v-6"/>
+        </svg>
+        {{ showStats ? 'Liste' : 'Statistiques' }}
+      </button>
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nouvelle Réclamation
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== STATISTICS DASHBOARD ===== -->
+  <div class="stats-section" *ngIf="showStats && stats">
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-total">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.total }}</span>
+          <span class="kpi-label">Total réclamations</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-pending">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.en_attente }}</span>
+          <span class="kpi-label">En attente</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-resolved">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.traitee }}</span>
+          <span class="kpi-label">Traitées</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-rejected">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.rejetee }}</span>
+          <span class="kpi-label">Rejetées</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-rate">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.unprocessedRate | number:'1.1-1' }}%</span>
+          <span class="kpi-label">Taux non-traitement</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-time">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ stats.averageProcessingTimeHours | number:'1.1-1' }}h</span>
+          <span class="kpi-label">Temps moyen traitement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3 class="chart-title">Répartition par statut</h3>
+        <div class="chart-wrapper chart-doughnut">
+          <canvas baseChart
+            [data]="statusChartData"
+            [options]="statusChartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-title">Réclamations par mois</h3>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="monthlyChartData"
+            [options]="monthlyChartOptions"
+            type="bar">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="chart-card chart-full">
+        <h3 class="chart-title">Évolution quotidienne</h3>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="dailyChartData"
+            [options]="dailyChartOptions"
+            type="line">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMPLAINTS LIST ===== -->
+  <div class="list-section" *ngIf="!showStats">
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="Rechercher par titre ou description..."
+          [(ngModel)]="searchKeyword" (ngModelChange)="onSearchChange()">
+      </div>
+
+      <div class="filter-group">
+        <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterStatusChange()" class="filter-select">
+          <option value="">Tous les statuts</option>
+          <option value="EN_ATTENTE">En attente</option>
+          <option value="TRAITEE">Traitée</option>
+          <option value="REJETEE">Rejetée</option>
+        </select>
+      </div>
+
+      <div class="sort-buttons">
+        <button class="btn-sort" [class.active]="sortField === 'createdAt'" (click)="toggleSort('createdAt')">
+          Date
+          <svg *ngIf="sortField === 'createdAt'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline [attr.points]="sortDirection === 'asc' ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+          </svg>
+        </button>
+        <button class="btn-sort" [class.active]="sortField === 'title'" (click)="toggleSort('title')">
+          Titre
+          <svg *ngIf="sortField === 'title'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline [attr.points]="sortDirection === 'asc' ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+          </svg>
+        </button>
+        <button class="btn-sort" [class.active]="sortField === 'status'" (click)="toggleSort('status')">
+          Statut
+          <svg *ngIf="sortField === 'status'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline [attr.points]="sortDirection === 'asc' ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="results-count">
+        {{ filteredComplaints.length }} réclamation(s)
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table class="data-table" *ngIf="paginatedComplaints.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Statut</th>
+            <th>Réponse</th>
+            <th>Date de création</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of paginatedComplaints" class="table-row">
+            <td class="td-id">#{{ c.id }}</td>
+            <td class="td-title">{{ c.title }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(c.status)">
+                {{ getStatusLabel(c.status) }}
+              </span>
+            </td>
+            <td>
+              <span class="has-response" *ngIf="c.response">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Oui
+              </span>
+              <span class="no-response" *ngIf="!c.response">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+                Non
+              </span>
+            </td>
+            <td class="td-date">{{ formatDate(c.createdAt) }}</td>
+            <td class="td-actions">
+              <button class="action-btn action-view" title="Détails" (click)="openDetail(c)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="action-btn action-edit" title="Modifier" (click)="openEditModal(c)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="action-btn action-response" title="Répondre" (click)="openResponseModal(c)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </button>
+
+              <!-- Status Dropdown -->
+              <div class="status-dropdown">
+                <button class="action-btn action-status" title="Changer statut">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                  </svg>
+                </button>
+                <div class="dropdown-menu">
+                  <button (click)="changeStatus(c, 'EN_ATTENTE')" [class.current]="c.status === 'EN_ATTENTE'">
+                    <span class="dot dot-warning"></span> En attente
+                  </button>
+                  <button (click)="changeStatus(c, 'TRAITEE')" [class.current]="c.status === 'TRAITEE'">
+                    <span class="dot dot-success"></span> Traitée
+                  </button>
+                  <button (click)="changeStatus(c, 'REJETEE')" [class.current]="c.status === 'REJETEE'">
+                    <span class="dot dot-danger"></span> Rejetée
+                  </button>
+                </div>
+              </div>
+
+              <button class="action-btn action-delete" title="Supprimer" (click)="deleteComplaint(c)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="paginatedComplaints.length === 0">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <p>Aucune réclamation trouvée</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
+        {{ p + 1 }}
+      </button>
+      <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CREATE/EDIT COMPLAINT ===== -->
+  <div class="modal-overlay" *ngIf="showFormModal" (click)="closeFormModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isEditing ? 'Modifier la réclamation' : 'Nouvelle réclamation' }}</h2>
+        <button class="modal-close" (click)="closeFormModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" *ngIf="errorMessage">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+        <div class="form-group">
+          <label for="complaint-title">Titre <span class="required">*</span></label>
+          <input id="complaint-title" type="text" [(ngModel)]="formComplaint.title"
+            [class.input-error]="fieldErrors['title']"
+            placeholder="Titre de la réclamation" maxlength="150">
+          <div class="field-error" *ngIf="fieldErrors['title']">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {{ fieldErrors['title'] }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="complaint-desc">Description <span class="required">*</span></label>
+          <textarea id="complaint-desc" [(ngModel)]="formComplaint.description" rows="5"
+            [class.input-error]="fieldErrors['description']"
+            placeholder="Décrivez votre réclamation en détail..."></textarea>
+          <div class="field-error" *ngIf="fieldErrors['description']">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {{ fieldErrors['description'] }}
+          </div>
+        </div>
+        <div class="form-group" *ngIf="isEditing">
+          <label for="complaint-status">Statut</label>
+          <select id="complaint-status" [(ngModel)]="formComplaint.status">
+            <option value="EN_ATTENTE">En attente</option>
+            <option value="TRAITEE">Traitée</option>
+            <option value="REJETEE">Rejetée</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeFormModal()">Annuler</button>
+        <button class="btn btn-primary" (click)="saveComplaint()">
+          {{ isEditing ? 'Enregistrer' : 'Créer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: RESPONSE ===== -->
+  <div class="modal-overlay" *ngIf="showResponseModal" (click)="closeResponseModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isEditingResponse ? 'Modifier la réponse' : 'Ajouter une réponse' }}</h2>
+        <button class="modal-close" (click)="closeResponseModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" *ngIf="errorMessage">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+        <div class="complaint-ref" *ngIf="selectedComplaint">
+          <strong>Réclamation :</strong> {{ selectedComplaint.title }}
+        </div>
+        <div class="form-group">
+          <label for="response-msg">Message de la réponse <span class="required">*</span></label>
+          <textarea id="response-msg" [(ngModel)]="formResponse.message" rows="5"
+            [class.input-error]="fieldErrors['message']"
+            placeholder="Rédigez votre réponse..."></textarea>
+          <div class="field-error" *ngIf="fieldErrors['message']">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {{ fieldErrors['message'] }}
+          </div>
+        </div>
+        <div class="response-actions" *ngIf="isEditingResponse">
+          <button class="btn btn-danger-outline" (click)="closeResponseModal(); deleteResponse(selectedComplaint!)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Supprimer la réponse
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeResponseModal()">Annuler</button>
+        <button class="btn btn-primary" (click)="saveResponse()">
+          {{ isEditingResponse ? 'Enregistrer' : 'Envoyer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DETAIL ===== -->
+  <div class="modal-overlay" *ngIf="showDetailModal && selectedComplaint" (click)="closeDetail()">
+    <div class="modal-content modal-detail" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Détails de la réclamation</h2>
+        <button class="modal-close" (click)="closeDetail()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-row">
+            <span class="detail-label">ID</span>
+            <span class="detail-value">#{{ selectedComplaint.id }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Titre</span>
+            <span class="detail-value">{{ selectedComplaint.title }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Statut</span>
+            <span class="badge" [ngClass]="getStatusClass(selectedComplaint.status)">
+              {{ getStatusLabel(selectedComplaint.status) }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Créée le</span>
+            <span class="detail-value">{{ formatDate(selectedComplaint.createdAt) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Mise à jour</span>
+            <span class="detail-value">{{ formatDate(selectedComplaint.updatedAt) }}</span>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3>Description</h3>
+          <p class="detail-description">{{ selectedComplaint.description }}</p>
+        </div>
+        <div class="detail-section response-section" *ngIf="selectedComplaint.response">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+            Réponse de l'administration
+          </h3>
+          <p class="response-text">{{ selectedComplaint.response.message }}</p>
+          <span class="response-date">Répondu le {{ formatDate(selectedComplaint.response.createdAt) }}</span>
+        </div>
+        <div class="detail-section no-response-section" *ngIf="!selectedComplaint.response">
+          <p class="no-response-text">Aucune réponse n'a encore été fournie pour cette réclamation.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeDetail()">Fermer</button>
+        <button class="btn btn-primary" (click)="closeDetail(); openResponseModal(selectedComplaint!)">
+          {{ selectedComplaint.response ? 'Modifier la réponse' : 'Répondre' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,210 @@
+<section class="ev-page">
+
+  <!-- ===== HERO BANNER ===== -->
+  <div class="ev-hero">
+    <div class="ev-hero__overlay"></div>
+    <div class="ev-hero__content">
+      <h1 class="ev-hero__title">Événements Yalla Padel</h1>
+      <p class="ev-hero__sub">Rejoignez nos tournois, ateliers et rencontres. Inscrivez-vous en un clic !</p>
+
+      <!-- CTA si non connecté -->
+      <div class="ev-hero__cta" *ngIf="!isLoggedIn">
+        <p class="ev-hero__cta-text">Connectez-vous pour vous inscrire aux événements</p>
+        <button class="btn btn--white" id="btn-login-hero" (click)="goLogin()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Se connecter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ev-container">
+
+    <!-- ===== NOTIFICATIONS ===== -->
+    <div class="ev-toast ev-toast--success" *ngIf="successMsg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      {{ successMsg }}
+    </div>
+    <div class="ev-toast ev-toast--error" *ngIf="errorMsg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      {{ errorMsg }}
+    </div>
+
+    <!-- ===== FILTRES ===== -->
+    <div class="ev-filters">
+      <div class="ev-search">
+        <svg class="ev-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="ev-search__input" type="text"
+               placeholder="Rechercher un événement…"
+               [(ngModel)]="filterSearch"
+               (input)="onFilterChange()"
+               id="ev-search-input"/>
+      </div>
+
+      <div class="ev-level-filters">
+        <button class="ev-level-btn"
+                *ngFor="let lvl of levels"
+                [class.active]="filterLevel === lvl.value"
+                (click)="filterLevel = lvl.value; onFilterChange()">
+          {{ lvl.label }}
+        </button>
+      </div>
+
+      <span class="ev-count">{{ filteredEvenements.length }} événement(s)</span>
+    </div>
+
+    <!-- ===== LOADING ===== -->
+    <div class="ev-loading" *ngIf="isLoading">
+      <div class="ev-spinner"></div>
+      <span>Chargement des événements…</span>
+    </div>
+
+    <!-- ===== LISTE VIDE ===== -->
+    <div class="ev-empty" *ngIf="!isLoading && filteredEvenements.length === 0">
+      <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <p>Aucun événement ne correspond à vos critères.</p>
+      <button class="btn btn--outline" (click)="filterLevel='ALL'; filterSearch=''; applyFilters()">
+        Réinitialiser les filtres
+      </button>
+    </div>
+
+    <!-- ===== GRILLE DES ÉVÉNEMENTS ===== -->
+    <div class="ev-grid" *ngIf="!isLoading && filteredEvenements.length > 0">
+
+      <article class="ev-card" *ngFor="let dto of filteredEvenements"
+               [id]="'ev-card-' + dto.event.eventId"
+               [class.ev-card--registered]="isRegistered(dto.event.eventId!)">
+
+        <!-- Image -->
+        <div class="ev-card__image-wrap">
+          <img *ngIf="dto.event.imageUrl" [src]="dto.event.imageUrl"
+               [alt]="dto.event.title" class="ev-card__image"/>
+          <div *ngIf="!dto.event.imageUrl" class="ev-card__image-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+            </svg>
+          </div>
+
+          <!-- Badges -->
+          <span class="ev-badge ev-badge--level" [ngClass]="getLevelColor(dto.event.level)">
+            {{ getLevelLabel(dto.event.level) }}
+          </span>
+          <span class="ev-badge ev-badge--registered" *ngIf="isRegistered(dto.event.eventId!)">
+            ✓ Inscrit
+          </span>
+        </div>
+
+        <!-- Corps -->
+        <div class="ev-card__body">
+          <h2 class="ev-card__title">{{ dto.event.title }}</h2>
+          <p class="ev-card__desc">{{ dto.event.description || 'Aucune description disponible.' }}</p>
+
+          <!-- Méta-infos -->
+          <div class="ev-card__meta">
+            <div class="ev-meta-row">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>{{ formatDate(dto.event.startTime) }}</span>
+            </div>
+            <div class="ev-meta-row" *ngIf="dto.event.location">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>{{ dto.event.location }}</span>
+            </div>
+            <div class="ev-meta-row">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>Capacité : {{ dto.event.capacity }} places</span>
+            </div>
+          </div>
+
+          <!-- Météo -->
+          <div class="ev-weather" [ngClass]="getWeatherClass(dto.weatherInfo)">
+            <span class="ev-weather__text">{{ dto.weatherInfo }}</span>
+          </div>
+        </div>
+
+        <!-- Footer card : bouton inscription -->
+        <div class="ev-card__footer">
+
+          <!-- Non inscrit -->
+          <ng-container *ngIf="!isRegistered(dto.event.eventId!)">
+            <button class="btn btn--register"
+                    [id]="'btn-register-' + dto.event.eventId"
+                    [disabled]="processingId === dto.event.eventId"
+                    (click)="register(dto.event.eventId!)">
+              <span *ngIf="processingId === dto.event.eventId" class="ev-spinner-sm"></span>
+              <svg *ngIf="processingId !== dto.event.eventId" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              {{ isLoggedIn ? 'S\'inscrire' : 'Se connecter pour s\'inscrire' }}
+            </button>
+          </ng-container>
+
+          <!-- Déjà inscrit -->
+          <ng-container *ngIf="isRegistered(dto.event.eventId!)">
+            <div class="ev-card__footer-registered">
+              <span class="ev-registered-label" *ngIf="!getMyParticipation(dto.event.eventId!)?.checkInTime">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Vous êtes inscrit(e)
+              </span>
+
+              <span class="ev-registered-label" style="color: #10b981;" *ngIf="getMyParticipation(dto.event.eventId!)?.checkInTime">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Présence confirmée (Check-in Validé)
+              </span>
+
+              <div style="display: flex; gap: 0.5rem; width: 100%;">
+                <button class="btn btn--secondary" style="flex: 1;"
+                        *ngIf="!getMyParticipation(dto.event.eventId!)?.checkInTime"
+                        [id]="'btn-checkin-' + dto.event.eventId"
+                        [disabled]="processingId === dto.event.eventId"
+                        (click)="checkIn(dto.event.eventId!)">
+                  Faire le check-in
+                </button>
+                <button class="btn btn--unregister" style="flex: 1;"
+                        *ngIf="!getMyParticipation(dto.event.eventId!)?.checkInTime"
+                        [id]="'btn-unregister-' + dto.event.eventId"
+                        [disabled]="processingId === dto.event.eventId"
+                        (click)="unregister(dto.event.eventId!)">
+                  <span *ngIf="processingId === dto.event.eventId" class="ev-spinner-sm"></span>
+                  Se désinscrire
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+        </div>
+
+      </article>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,651 @@
+// ── Variables ─────────────────────────────────────────────────
+$primary:       #0ea37a;
+$primary-hover: #0c8a68;
+$primary-light: rgba(14, 163, 122, 0.1);
+$primary-dim:   rgba(14, 163, 122, 0.18);
+$txt1:          #1F2937;
+$txt2:          #6B7280;
+$txt3:          #9CA3AF;
+$bg1:           #FFFFFF;
+$bg2:           #F9FAFB;
+$bg3:           #F3F4F6;
+$border:        #E5E7EB;
+$success:       #10B981;
+$danger:        #EF4444;
+$danger-light:  rgba(239, 68, 68, 0.08);
+$sh-sm:         0 1px 2px rgba(0,0,0,.05);
+$sh-md:         0 4px 6px -1px rgba(0,0,0,.08);
+$sh-lg:         0 10px 25px -5px rgba(0,0,0,.1);
+
+// ── Page ──────────────────────────────────────────────────────
+.admin-page {
+  display: flex;
+  min-height: 100vh;
+  background: $bg2;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: $txt1;
+}
+
+.sidebar-accent {
+  width: 4px;
+  background: linear-gradient(180deg, $primary 0%, $primary-hover 100%);
+  flex-shrink: 0;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  max-width: 1100px;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem;
+  }
+}
+
+// ── Top Bar ───────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: $txt3;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &-sep    { color: $txt3; }
+  &-current { color: $primary; font-weight: 600; }
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: $txt1;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: $sh-sm;
+  transition: background .18s, transform .18s, box-shadow .18s;
+  white-space: nowrap;
+
+  &:hover {
+    background: $primary-hover;
+    transform: translateY(-1px);
+    box-shadow: $sh-md;
+  }
+}
+
+// ── KPI Row ───────────────────────────────────────────────────
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kpi-card {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: $sh-sm;
+  transition: transform .18s, box-shadow .18s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $sh-md;
+  }
+
+  .kpi-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .kpi-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .kpi-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: $txt1;
+    line-height: 1.1;
+  }
+
+  .kpi-label {
+    font-size: 0.72rem;
+    color: $txt3;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+// ── Notifications ─────────────────────────────────────────────
+.notif {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  animation: slideDown .25s ease;
+
+  &.success {
+    background: rgba($success, 0.1);
+    color: darken($success, 8%);
+    border: 1px solid rgba($success, 0.25);
+  }
+
+  &.error {
+    background: $danger-light;
+    color: darken($danger, 8%);
+    border: 1px solid rgba($danger, 0.2);
+  }
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.success { background: $success; }
+  &.error   { background: $danger; }
+}
+
+// ── Form Drawer ───────────────────────────────────────────────
+.form-drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+
+  &.open {
+    max-height: 600px;
+  }
+
+  &-inner {
+    background: $bg1;
+    border: 1px solid $border;
+    border-left: 3px solid $primary;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: $sh-md;
+  }
+
+  &-header {
+    margin-bottom: 1.25rem;
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $txt1;
+      margin: 0 0 0.2rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+      color: $txt2;
+      margin: 0;
+    }
+  }
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  &.span-2 {
+    grid-column: span 2;
+
+    @media (max-width: 600px) {
+      grid-column: span 1;
+    }
+  }
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $txt2;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  input {
+    padding: 0.55rem 0.85rem;
+    border: 1px solid $border;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    color: $txt1;
+    background: $bg2;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px $primary-light;
+      background: $bg1;
+    }
+
+    &.err {
+      border-color: $danger;
+      box-shadow: 0 0 0 3px rgba($danger, .1);
+    }
+  }
+}
+
+.input-icon-wrap {
+  position: relative;
+
+  input { padding-left: 2.25rem; }
+
+  .iico {
+    position: absolute;
+    left: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.78rem;
+    color: $txt3;
+    font-weight: 700;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.ferr {
+  font-size: 0.73rem;
+  color: $danger;
+  font-weight: 500;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid $border;
+  margin-top: 0.25rem;
+}
+
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+
+  &:hover:not(:disabled) { background: $primary-hover; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid $border;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  color: $txt2;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background .15s;
+
+  &:hover { background: $bg3; }
+}
+
+// ── Table Panel ───────────────────────────────────────────────
+.table-panel {
+  background: $bg1;
+  border: 1px solid $border;
+  border-radius: 12px;
+  box-shadow: $sh-md;
+  overflow: hidden;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid $border;
+  flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+
+  .search-ico {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.55rem 2.2rem 0.55rem 2.1rem;
+    border: 1px solid $border;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: $txt1;
+    background: $bg2;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s;
+
+    &::placeholder { color: $txt3; }
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px $primary-light;
+      background: $bg1;
+    }
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $txt3;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color .15s;
+
+    &:hover { color: $danger; }
+  }
+}
+
+.result-count {
+  font-size: 0.8rem;
+  color: $txt3;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+// ── Loader Bar ────────────────────────────────────────────────
+.table-loading {
+  padding: 0;
+
+  .loader-bar {
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, $primary 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: loadSlide 1.2s infinite ease-in-out;
+  }
+}
+
+// ── Table ─────────────────────────────────────────────────────
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  thead tr {
+    background: $bg2;
+    border-bottom: 1px solid $border;
+  }
+
+  th {
+    padding: 0.75rem 1.1rem;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $txt2;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    user-select: none;
+
+    &.th-sort {
+      cursor: pointer;
+      transition: color .15s;
+      &:hover { color: $primary; }
+    }
+
+    &.th-center { text-align: center; }
+  }
+
+  .sort-arrow {
+    font-size: 0.7rem;
+    color: $txt3;
+    margin-left: 0.3rem;
+    &.active { color: $primary; }
+  }
+
+  tbody tr.data-row {
+    border-bottom: 1px solid $border;
+    transition: background .12s;
+    animation: fadeRow .25s ease both;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: $bg2; }
+  }
+
+  td {
+    padding: 0.85rem 1.1rem;
+    color: $txt1;
+    vertical-align: middle;
+
+    &.td-center { text-align: center; }
+  }
+}
+
+// ── Table cells ───────────────────────────────────────────────
+.td-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.club-avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: $primary-dim;
+  color: $primary;
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.club-name-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  .cname {
+    font-weight: 600;
+    color: $txt1;
+  }
+
+  .cid {
+    font-size: 0.68rem;
+    color: $txt3;
+    font-family: monospace;
+  }
+}
+
+.badge-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: $primary-light;
+  color: darken($primary, 5%);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.badge-terrains {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  background: $bg3;
+  color: $txt1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid $border;
+  padding: 0 0.5rem;
+}
+
+.badge-prix {
+  display: inline-block;
+  background: rgba($success, .1);
+  color: darken($success, 8%);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+
+.btn-del {
+  width: 32px;
+  height: 32px;
+  border: 1px solid $border;
+  border-radius: 7px;
+  background: $bg1;
+  cursor: pointer;
+  color: $txt3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, color .15s, border-color .15s;
+
+  &:hover {
+    background: $danger-light;
+    color: $danger;
+    border-color: rgba($danger, .3);
+  }
+
+  &.loading { opacity: 0.5; cursor: not-allowed; }
+}
+
+// ── Empty State ───────────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  color: $txt2;
+
+  .empty-illo {
+    font-size: 2.5rem;
+    opacity: 0.35;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin: 0 0 1rem;
+  }
+}
+
+// ── Spinners ──────────────────────────────────────────────────
+.spin {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255,255,255,.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+
+.spin-sm {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba($danger,.25);
+  border-top-color: $danger;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+// ── Animations ────────────────────────────────────────────────
+@keyframes spin      { to { transform: rotate(360deg); } }
+@keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeRow   { from { opacity:0; transform:translateX(-4px); } to { opacity:1; transform:translateX(0); } }
+@keyframes loadSlide { 0%,100% { background-position: 200% 0; } 50% { background-position: 0% 0; } }

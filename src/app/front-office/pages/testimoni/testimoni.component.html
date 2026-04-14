@@ -1,0 +1,110 @@
+<div class="testimoni-section" id="testimoni">
+  <div class="max-w-screen-xl px-6 sm:px-8 lg:px-16 mx-auto">
+
+    <!-- ── HEADER ── -->
+    <div class="testimoni-header">
+      <div class="testimoni-badge">💬 Témoignages</div>
+      <h3 class="testimoni-title">
+        Ce que disent nos
+        <span class="testimoni-title__highlight">joueurs</span>
+      </h3>
+      <p class="testimoni-subtitle">
+        Plus de 500 joueurs nous font confiance — découvrez leurs expériences sur nos terrains.
+      </p>
+    </div>
+
+    <!-- ── SWIPER ── -->
+    <swiper-container #swiperContainer init="false" class="testimoni-swiper pb-10">
+
+      <swiper-slide *ngFor="let t of listTestimoni">
+        <div class="px-2 h-full">
+          <div class="testimoni-card">
+
+            <!-- Guillemets décoratifs -->
+            <div class="testimoni-card__quote">"</div>
+
+            <!-- Texte -->
+            <p class="testimoni-card__text">{{ t.testimoni }}</p>
+
+            <!-- Séparateur -->
+            <div class="testimoni-card__divider"></div>
+
+            <!-- Footer : user + rating -->
+            <div class="testimoni-card__footer">
+
+              <!-- Avatar + infos -->
+              <div class="testimoni-card__user">
+                <div class="testimoni-card__avatar">
+                  <img
+                    *ngIf="t.image"
+                    [src]="t.image"
+                    [alt]="t.name"
+                    class="testimoni-card__img"
+                  />
+                  <div *ngIf="!t.image" class="testimoni-card__initials">
+                    {{ t.name.charAt(0) }}
+                  </div>
+                </div>
+                <div class="testimoni-card__info">
+                  <p class="testimoni-card__name">{{ t.name }}</p>
+                  <p class="testimoni-card__location">
+                    {{ t.city }}, {{ t.country }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Rating -->
+              <div class="testimoni-card__rating">
+                <div class="testimoni-card__stars">
+                  <span *ngFor="let star of getStars(t.rating)" class="star">★</span>
+                </div>
+                <p class="testimoni-card__rating-val">{{ t.rating }}</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </swiper-slide>
+
+    </swiper-container>
+
+    <!-- ── NAVIGATION ── -->
+    <div class="testimoni-nav">
+
+      <!-- Indicateur -->
+      <p class="testimoni-nav__count">
+        <span class="testimoni-nav__current">{{ currentSlide + 1 }}</span>
+        <span class="testimoni-nav__sep">/</span>
+        <span class="testimoni-nav__total">{{ listTestimoni.length }}</span>
+      </p>
+
+      <!-- Boutons -->
+      <div class="testimoni-nav__btns">
+        <button
+          type="button"
+          (click)="goToPrevSlide()"
+          class="testimoni-nav__btn"
+          aria-label="Précédent"
+        >
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          (click)="goToNextSlide()"
+          class="testimoni-nav__btn testimoni-nav__btn--next"
+          aria-label="Suivant"
+        >
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div
+  class="max-w-screen-xl mt-8 mb-6 sm:mt-14 sm:mb-14 px-6 sm:px-8 lg:px-16 mx-auto feature-section"
+  id="feature"
+>
+  <div class="grid grid-flow-row sm:grid-flow-col grid-cols-1 sm:grid-cols-2 gap-12 py-8 my-12 items-center">
+
+    <!-- ── IMAGE : Terrain de padel ── -->
+    <app-scroll-animation className="flex w-full justify-end">
+      <div class="h-full w-full p-4">
+
+        <div class="feature-image-wrap">
+          <img
+            src="assets/padel-court.jpg"
+            alt="Terrain de padel professionnel"
+          />
+
+          <!-- Badge disponibilité flottant -->
+          <div class="court-badge">
+            <p class="court-badge__label">Disponible maintenant</p>
+            <p class="court-badge__value">
+              <span class="ping-dot">
+                <span></span>
+                <span></span>
+              </span>
+              {{ availableCourts }} terrains libres
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </app-scroll-animation>
+
+    <!-- ── TEXTE ── -->
+    <app-scroll-animation>
+      <div class="feature-text w-full lg:w-10/12">
+
+        <!-- Badge -->
+        <div class="feature-badge">
+          🎾 Pourquoi Nous Choisir
+        </div>
+
+        <!-- Titre -->
+        <h3 class="feature-title">
+          Tout ce qu'il faut pour
+          <span class="highlight">jouer au padel</span>
+        </h3>
+
+        <!-- Divider décoratif -->
+        <div class="feature-divider">
+          <div class="line"></div>
+          <div class="dot"></div>
+          <div class="line-sm"></div>
+        </div>
+
+        <!-- Description -->
+        <p class="feature-desc">
+          Découvrez une académie complète avec des installations modernes,
+          des coachs certifiés et une communauté passionnée du padel.
+        </p>
+
+        <!-- Liste des features -->
+        <ul class="feature-list">
+          <li
+            *ngFor="let feature of features; let i = index"
+            class="feature-item"
+          >
+            <!-- Icône -->
+            <div class="feature-item__icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <!-- Texte -->
+            <div class="feature-item__body">
+              <p class="feature-item__title">{{ feature.title }}</p>
+              <p class="feature-item__desc">{{ feature.desc }}</p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- CTA -->
+        <button routerLink="/reservation" class="feature-cta">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          Réserver un Terrain
+        </button>
+
+      </div>
+    </app-scroll-animation>
+
+  </div>
+</div>

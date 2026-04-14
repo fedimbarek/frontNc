@@ -1,0 +1,89 @@
+<header class="site-header"
+  class="fixed top-0 left-0 right-0 w-full z-30 bg-white/95 backdrop-blur border-b border-gray-100 transition-all"
+  [ngClass]="{'shadow-sm': scrollActive}">
+  <nav class="max-w-screen-xl mx-auto px-6 sm:px-8 lg:px-16 h-16 flex items-center justify-between">
+
+    <!-- LOGO + TITLE -->
+    <div class="flex items-center gap-3 min-w-[220px]">
+      <img src="assets/logo.png" class="h-9 w-9 object-contain" alt="Logo" />
+      <h1 class="text-base font-extrabold tracking-tight text-gray-900 leading-none">
+        Yalla Padel
+      </h1>
+    </div>
+
+    <!-- MENU -->
+    <ul class="hidden lg:flex items-center gap-8 font-semibold text-gray-700">
+      <li (click)="scrollTo('about')" [ngClass]="activeLink === 'about' ? 'menu-active' : ''" class="menu-link">
+        About
+      </li>
+
+      <li (click)="scrollTo('feature')" [ngClass]="activeLink === 'feature' ? 'menu-active' : ''" class="menu-link">
+        Feature
+      </li>
+
+      <li (click)="scrollTo('pricing')" [ngClass]="activeLink === 'pricing' ? 'menu-active' : ''" class="menu-link">
+        Pricing
+      </li>
+
+      <li (click)="scrollTo('testimonials')" [ngClass]="activeLink === 'testimonials' ? 'menu-active' : ''"
+        class="menu-link">
+        Testimonials
+      </li>
+      <li>
+        <a routerLink="/evenements" class="menu-link cursor-pointer font-bold text-gray-700" style="padding-left:14px; padding-right:14px;">
+          Événements
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/shop/products" class="menu-link cursor-pointer font-bold text-gray-700" style="padding-left:14px; padding-right:14px;">
+          Shop
+        </a>
+      </li>
+
+      <li>
+        <a (click)="joinUs()"
+          class="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-sm transition-all cursor-pointer"
+          style="background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Join Us
+        </a>
+      </li>
+    </ul>
+
+
+
+    <!-- ACTIONS -->
+    <div class="flex items-center justify-end gap-4">
+      <ng-container *ngIf="!isLoggedIn">
+        <a (click)="login()" class="signin-link cursor-pointer">
+          Sign In
+        </a>
+         <a routerLink="/inscription" class="signin-link">
+          Sign Up
+        </a>
+
+        
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn">
+        <div class="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-full border border-gray-100">
+          <div class="h-7 w-7 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-bold">
+            {{ user?.firstName?.charAt(0) || user?.username?.charAt(0) || 'U' }}
+          </div>
+          <span class="text-xs font-bold text-gray-600 hidden sm:inline">Hello, {{ user?.firstName || user?.username }}</span>
+        </div>
+        <a (click)="logout()" class="signin-link cursor-pointer text-red-500 hover:text-red-600 font-bold">
+          Logout
+        </a>
+      </ng-container>
+    </div>
+
+  </nav>
+</header>

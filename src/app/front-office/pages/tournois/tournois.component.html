@@ -1,0 +1,70 @@
+<section class="tn-page">
+  <header class="tn-hero">
+    <div class="tn-hero__content">
+      <span class="tn-kicker">Tournois</span>
+      <h1>Réservez votre place pour les prochains tournois</h1>
+      <p>Consultez les tournois disponibles, filtrez par statut et inscrivez-vous avec votre compte Keycloak connecté, comme pour les événements.</p>
+    </div>
+    <div class="tn-hero__stats">
+      <div>
+        <strong>{{ filteredTournois.length }}</strong>
+        <span>tournois affichés</span>
+      </div>
+      <div>
+        <strong>{{ tournois.length }}</strong>
+        <span>tournois au total</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="tn-toolbar">
+    <div class="tn-search">
+      <input type="text" [(ngModel)]="searchTerm" (input)="onFilterChange()" placeholder="Rechercher un tournoi, un lieu..." />
+    </div>
+    <div class="tn-filters">
+      <button type="button" *ngFor="let item of statuses" [class.active]="statusFilter === item.value" (click)="statusFilter = item.value; onFilterChange()">
+        {{ item.label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tn-alert tn-alert--success" *ngIf="successMsg">{{ successMsg }}</div>
+  <div class="tn-alert tn-alert--error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="tn-loading" *ngIf="isLoading">Chargement des tournois...</div>
+
+  <div class="tn-empty" *ngIf="!isLoading && filteredTournois.length === 0">
+    Aucun tournoi ne correspond aux critères sélectionnés.
+  </div>
+
+  <div class="tn-grid" *ngIf="!isLoading && filteredTournois.length > 0">
+    <article class="tn-card" *ngFor="let tournoi of filteredTournois" [class.tn-card--registered]="isRegistered(tournoi)">
+      <div class="tn-card__header">
+        <div>
+          <span class="tn-badge" [ngClass]="getStatusClass(tournoi.statut)">{{ getStatusLabel(tournoi.statut) }}</span>
+          <h2>{{ tournoi.nom }}</h2>
+        </div>
+        <div class="tn-price" *ngIf="tournoi.prixInscription !== null && tournoi.prixInscription !== undefined">
+          {{ tournoi.prixInscription }} DT
+        </div>
+      </div>
+
+      <p class="tn-desc">{{ tournoi.description || 'Aucune description disponible.' }}</p>
+
+      <ul class="tn-meta">
+        <li><span>Date début</span><strong>{{ formatDate(tournoi.dateDebut) }}</strong></li>
+        <li><span>Date fin</span><strong>{{ formatDate(tournoi.dateFin) }}</strong></li>
+        <li><span>Lieu</span><strong>{{ tournoi.lieu }}</strong></li>
+        <li><span>Places restantes</span><strong>{{ getRemainingSeats(tournoi) }}</strong></li>
+      </ul>
+
+      <div class="tn-footer">
+        <span class="tn-registered" *ngIf="isRegistered(tournoi)">Vous êtes inscrit</span>
+        <button type="button" class="tn-btn" [disabled]="!canRegister(tournoi) || processingId === tournoi.id" (click)="register(tournoi.id!)">
+          <span *ngIf="processingId === tournoi.id">Traitement...</span>
+          <span *ngIf="processingId !== tournoi.id">{{ isLoggedIn ? 'S\'inscrire' : 'Se connecter' }}</span>
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,160 @@
+.gt-page {
+  padding: 1rem;
+}
+
+.gt-header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gt-header h1,
+.gt-modal__header h2,
+.gt-card h2 {
+  margin: 0;
+}
+
+.gt-alert {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.gt-alert--success { background: #e8fff1; color: #11623a; }
+.gt-alert--error { background: #ffeceb; color: #9a1f1f; }
+
+.gt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.gt-card {
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #e5edf0;
+  box-shadow: 0 12px 30px rgba(15, 35, 46, 0.06);
+}
+
+.gt-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.gt-badge {
+  display: inline-flex;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #eef4f5;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.gt-meta {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.gt-meta div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gt-meta dt {
+  color: #7c8d94;
+}
+
+.gt-meta dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.gt-winner,
+.gt-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.gt-winner select {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #d8e2e6;
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  background: #fff;
+}
+
+.gt-hint {
+  margin: 0.65rem 0 0;
+  color: #6f838a;
+  font-size: 0.92rem;
+}
+
+.gt-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  background: #173b4d;
+  color: #fff;
+  font-weight: 700;
+}
+
+.gt-btn--primary {
+  background: #244d63;
+}
+
+.gt-btn--secondary {
+  background: #eef4f5;
+  color: #173b4d;
+}
+
+.gt-btn--danger {
+  background: #a92c2c;
+}
+
+.gt-loading,
+.gt-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: #5f7277;
+}
+
+.gt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 20, 24, 0.48);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.gt-modal {
+  width: min(100%, 760px);
+  background: #fff;
+  border-radius: 22px;
+  padding: 1rem;
+}
+
+.gt-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gt-modal__close {
+  border: 0;
+  background: transparent;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}

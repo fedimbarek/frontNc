@@ -1,0 +1,461 @@
+// ============================================
+// DESIGN SYSTEM — PADEL TESTIMONI
+// Direction : Luxury Sport / Refined Green
+// ============================================
+
+$padel-primary:       #1a472a;
+$padel-primary-light: #2d6a42;
+$padel-primary-dark:  #0f2d19;
+$padel-accent:        #4caf50;
+$padel-accent-light:  #81c784;
+$padel-accent-alt:    #c45c1a;
+$padel-secondary:     #f1f8f4;
+$padel-gold:          #f59e0b;
+
+$shadow-soft:   0 4px 24px rgba(26, 71, 42, 0.07);
+$shadow-medium: 0 8px 40px rgba(26, 71, 42, 0.13);
+$shadow-strong: 0 20px 60px rgba(26, 71, 42, 0.18);
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmerSlide {
+  from { left: -100%; }
+  to   { left: 200%; }
+}
+
+@keyframes starPop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes quoteFloat {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%       { transform: translateY(-6px) rotate(-5deg); }
+}
+
+// ============================================
+// SECTION
+// ============================================
+
+.testimoni-section {
+  width: 100%;
+  padding: 80px 0 100px;
+  background: linear-gradient(160deg, #ffffff 0%, #f8fdf9 50%, #f1f8f4 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    top: -150px;
+    left: -150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    right: -100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26, 71, 42, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.testimoni-header {
+  text-align: center;
+  margin-bottom: 52px;
+  animation: fadeInUp 0.7s ease both;
+}
+
+.testimoni-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(26, 71, 42, 0.08));
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: $padel-primary;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+.testimoni-title {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: $padel-primary-dark;
+  line-height: 1.2;
+  margin: 0 0 14px;
+
+  &__highlight {
+    background: linear-gradient(
+      135deg,
+      $padel-primary,
+      $padel-accent,
+      $padel-accent-alt
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease infinite;
+  }
+}
+
+.testimoni-subtitle {
+  font-size: 16px;
+  color: #5a6a61;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+// ============================================
+// SWIPER OVERRIDE
+// ============================================
+
+.testimoni-swiper {
+  width: 100%;
+
+  // Pagination bullets
+  &::part(bullet) {
+    background: rgba($padel-primary, 0.25);
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  &::part(bullet-active) {
+    background: $padel-primary;
+    width: 24px;
+    border-radius: 4px;
+  }
+}
+
+// ============================================
+// CARD
+// ============================================
+
+.testimoni-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid rgba(76, 175, 80, 0.12);
+  border-radius: 24px;
+  padding: 32px 28px 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $shadow-soft;
+  overflow: hidden;
+  transition:
+    transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-medium;
+    border-color: rgba(76, 175, 80, 0.35);
+
+    .testimoni-card__quote {
+      color: rgba($padel-accent, 0.25);
+    }
+  }
+
+  // Accent bar en haut
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, $padel-primary, $padel-accent, $padel-accent-alt);
+    border-radius: 24px 24px 0 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  &:hover::before {
+    transform: scaleX(1);
+  }
+
+  // Guillemet décoratif
+  &__quote {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba($padel-accent, 0.12);
+    font-family: Georgia, serif;
+    transition: color 0.3s ease;
+    animation: quoteFloat 4s ease-in-out infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  // Texte du témoignage
+  &__text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #4a5e52;
+    font-style: italic;
+    flex-grow: 1;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  // Divider
+  &__divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba($padel-accent, 0.3), transparent);
+    margin-bottom: 20px;
+  }
+
+  // Footer
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  // Avatar
+  &__avatar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba($padel-accent, 0.3);
+    flex-shrink: 0;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, $padel-primary, $padel-accent);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  // Infos joueur
+  &__info { display: flex; flex-direction: column; }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 700;
+    color: $padel-primary-dark;
+    margin: 0 0 2px;
+  }
+
+  &__location {
+    font-size: 12px;
+    color: #7a8c81;
+    margin: 0;
+  }
+
+  // Rating
+  &__rating {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  &__stars {
+    display: flex;
+    gap: 2px;
+
+    .star {
+      font-size: 14px;
+      color: $padel-gold;
+      animation: starPop 0.4s ease both;
+
+      @for $i from 1 through 5 {
+        &:nth-child(#{$i}) { animation-delay: #{$i * 80}ms; }
+      }
+    }
+  }
+
+  &__rating-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: $padel-primary;
+    margin: 0;
+  }
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+
+.testimoni-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 32px;
+
+  &__count {
+    font-size: 15px;
+    font-weight: 600;
+    color: #7a8c81;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__current {
+    font-size: 22px;
+    font-weight: 800;
+    color: $padel-primary;
+  }
+
+  &__sep { color: rgba($padel-primary, 0.3); }
+
+  &__total {
+    font-size: 15px;
+    color: #aab8b0;
+  }
+
+  &__btns {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid rgba($padel-primary, 0.25);
+    color: $padel-primary;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.25s cubic-bezier(0.23, 1, 0.32, 1),
+      box-shadow 0.25s ease,
+      border-color 0.25s ease,
+      background 0.25s ease,
+      color 0.25s ease;
+    box-shadow: $shadow-soft;
+
+    svg {
+      width: 22px;
+      height: 22px;
+      transition: transform 0.2s ease;
+    }
+
+    // Shimmer
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-18deg);
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, $padel-primary, $padel-primary-light);
+      border-color: $padel-primary;
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: $shadow-medium;
+
+      &::after { animation: shimmerSlide 0.5s ease forwards; }
+    }
+
+    &:active { transform: scale(0.96); }
+
+    // Flèche droite sur le bouton next
+    &--next:hover svg { transform: translateX(3px); }
+    &:not(&--next):hover svg { transform: translateX(-3px); }
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 640px) {
+  .testimoni-section {
+    padding: 60px 0 80px;
+  }
+
+  .testimoni-card {
+    padding: 24px 20px 20px;
+
+    &__quote { font-size: 60px; }
+    &__text  { font-size: 14px; }
+  }
+
+  .testimoni-nav {
+    justify-content: center;
+
+    &__btn {
+      width: 46px;
+      height: 46px;
+
+      svg { width: 20px; height: 20px; }
+    }
+  }
+}

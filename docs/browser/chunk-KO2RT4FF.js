@@ -1,0 +1,1 @@
+import{d as a}from"./chunk-BUPRD7YL.js";import"./chunk-UC4IOSGR.js";import"./chunk-2I2HRDSH.js";import"./chunk-6U7LWZU7.js";import"./chunk-KHWB2XAZ.js";import"./chunk-VI4YWMWU.js";import"./chunk-PM4UZ2SN.js";export{a as BackOfficeModule};

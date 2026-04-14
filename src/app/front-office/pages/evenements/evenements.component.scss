@@ -1,0 +1,454 @@
+/* =========================================
+   ÉVÉNEMENTS — Front-Office (Participant)
+   ========================================= */
+
+$primary: hsla(162, 72%, 40%, 1);
+$primary-dark: hsla(162, 72%, 28%, 1);
+$primary-light: hsla(162, 72%, 95%, 1);
+$danger: #ef4444;
+$success: #22c55e;
+$warning: #f59e0b;
+$border: #e5e7eb;
+$bg: #f8fafc;
+$card-bg: #ffffff;
+$text: #0f172a;
+$text-muted: #64748b;
+$radius: 16px;
+$shadow: 0 2px 20px rgba(0,0,0,0.07);
+$shadow-hover: 0 10px 40px rgba(0,0,0,0.13);
+
+/* ---- Hero ---- */
+.ev-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, hsla(162,72%,20%,1) 100%);
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, hsla(162,72%,50%,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, hsla(220,80%,60%,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: white;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  &__sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    margin: 0 0 1.5rem;
+  }
+
+  &__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  &__cta-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin: 0;
+  }
+}
+
+/* ---- Container ---- */
+.ev-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+/* ---- Toasts ---- */
+.ev-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideDown 0.25s ease;
+
+  &--success {
+    background: #f0fdf4;
+    color: darken($success, 20%);
+    border-left: 4px solid $success;
+    box-shadow: 0 2px 10px rgba($success, 0.15);
+  }
+
+  &--error {
+    background: #fef2f2;
+    color: darken($danger, 10%);
+    border-left: 4px solid $danger;
+    box-shadow: 0 2px 10px rgba($danger, 0.15);
+  }
+}
+
+/* ---- Filtres ---- */
+.ev-filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.ev-search {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+
+  &__icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.65rem 0.9rem 0.65rem 2.4rem;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    outline: none;
+    background: white;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+}
+
+.ev-level-filters {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.ev-level-btn {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid $border;
+  background: white;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $text-muted;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: $primary; color: $primary; }
+
+  &.active {
+    background: $primary;
+    border-color: $primary;
+    color: white;
+    box-shadow: 0 2px 8px rgba($primary, 0.35);
+  }
+}
+
+.ev-count {
+  font-size: 0.82rem;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+/* ---- Loading ---- */
+.ev-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 5rem;
+  color: $text-muted;
+}
+
+.ev-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.ev-spinner-sm {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Empty ---- */
+.ev-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: $text-muted;
+  svg { opacity: 0.25; }
+  p { font-size: 1.05rem; margin: 0; }
+}
+
+/* ---- Grille ---- */
+.ev-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.8rem;
+}
+
+/* ---- Card ---- */
+.ev-card {
+  background: $card-bg;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+  border: 1.5px solid $border;
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    box-shadow: $shadow-hover;
+    transform: translateY(-4px);
+  }
+
+  &--registered {
+    border-color: $primary;
+    box-shadow: 0 2px 20px rgba($primary, 0.15);
+  }
+
+  &__image-wrap {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  &:hover &__image { transform: scale(1.05); }
+
+  &__image-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba($primary, 0.3);
+  }
+
+  &__body {
+    padding: 1.4rem;
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $text;
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+  }
+
+  &__desc {
+    font-size: 0.85rem;
+    color: $text-muted;
+    line-height: 1.5;
+    margin: 0 0 1.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  &__footer {
+    padding: 1rem 1.4rem;
+    border-top: 1px solid $border;
+    background: #fafafa;
+  }
+
+  &__footer-registered {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+/* ---- Badges sur image ---- */
+.ev-badge {
+  position: absolute;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(6px);
+
+  &--level {
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+  }
+
+  &--registered {
+    top: 12px;
+    right: 12px;
+    background: $primary;
+    color: white;
+    box-shadow: 0 2px 8px rgba($primary, 0.4);
+  }
+
+  &--all        { background: rgba(100,116,139,0.8) !important; }
+  &--beginner   { background: rgba(34,197,94,0.85) !important; }
+  &--intermediate { background: rgba(245,158,11,0.85) !important; }
+  &--advanced   { background: rgba(239,68,68,0.85) !important; }
+}
+
+/* ---- Méta infos ---- */
+.ev-meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.83rem;
+  color: $text-muted;
+
+  svg { flex-shrink: 0; margin-top: 1px; }
+}
+
+/* ---- Météo ---- */
+.ev-weather {
+  padding: 0.6rem 0.9rem;
+  border-radius: 9px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.5;
+
+  &--good   { background: #f0fdf4; color: darken($success, 25%); border-left: 3px solid $success; }
+  &--bad    { background: #fffbeb; color: darken($warning, 30%); border-left: 3px solid $warning; }
+  &--neutral{ background: #f1f5f9; color: $text-muted; border-left: 3px solid $border; }
+}
+
+/* ---- Boutons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+
+  &--white {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+    &:hover { background: rgba(255,255,255,0.22); }
+  }
+
+  &--register {
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    color: white;
+    box-shadow: 0 3px 12px rgba($primary, 0.35);
+    &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 20px rgba($primary, 0.45); }
+    &:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+  }
+
+  &--unregister {
+    background: #fef2f2;
+    color: $danger;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    &:hover:not(:disabled) { background: #fecaca; }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+
+  &--outline {
+    background: white;
+    color: $text-muted;
+    border: 1.5px solid $border;
+    &:hover { border-color: $primary; color: $primary; }
+  }
+}
+
+.ev-registered-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $primary;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .ev-hero { padding: 3.5rem 1.2rem 3rem; }
+  .ev-grid { grid-template-columns: 1fr; }
+  .ev-filters { flex-direction: column; align-items: stretch; }
+  .ev-level-filters { overflow-x: auto; flex-wrap: nowrap; }
+}

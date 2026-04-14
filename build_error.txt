@@ -1,0 +1,138 @@
+﻿[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+Application bundle generation failed. [14.170 seconds]
+
+node.exe : 
+[1m[31m[31mX [41;31
+m[[41;97mERROR[41;31m
+][0m [1mNG2: Object 
+is possibly 
+'undefined'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+Au caractère Ligne:1 : 
+1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ([1m[31m[31   
+ mX...r-compiler][    
+0m:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.html:280:52:
+[37m      280 Ôöé ... 
+ *ngFor="let s of job.r
+equiredSkills.[32mslic
+e[37m(0, 3)">{{ s 
+}}</span>
+          ÔòÁ          
+                       
+         [32m~~~~~[0m
+
+  Error occurs in the 
+template of component A
+dminDashboardComponent.
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.ts:30:15:
+[37m      30 Ôöé   
+templateUrl: [32m'./ad
+min-dashboard.component
+.html'[37m,
+         ÔòÁ           
+     [32m~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~[
+0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mNG2: Object is 
+possibly 
+'undefined'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.html:282:42:
+[37m      282 Ôöé ... 
+ *ngIf="job.requiredSki
+lls.[32mlength[37m > 
+3">+{{ 
+job.requiredSkills...
+          ÔòÁ          
+                      
+[32m~~~~~~[0m
+
+  Error occurs in the 
+template of component A
+dminDashboardComponent.
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.ts:30:15:
+[37m      30 Ôöé   
+templateUrl: [32m'./ad
+min-dashboard.component
+.html'[37m,
+         ÔòÁ           
+     [32m~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~[
+0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mNG2: Object is 
+possibly 
+'undefined'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.html:282:77:
+[37m      282 Ôöé 
+...redSkills.length > 
+3">+{{ job.requiredSkil
+ls.[32mlength[37m - 
+3 }}</span>
+          ÔòÁ          
+                       
+                
+[32m~~~~~~[0m
+
+  Error occurs in the 
+template of component A
+dminDashboardComponent.
+
+    src/app/back-office
+/admin-dashboard.compon
+ent.ts:30:15:
+[37m      30 Ôöé   
+templateUrl: [32m'./ad
+min-dashboard.component
+.html'[37m,
+         ÔòÁ           
+     [32m~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~[
+0m
+
+[39m[22m

@@ -1,0 +1,231 @@
+<div class="admin-page">
+
+  <!-- Sidebar accent -->
+  <div class="sidebar-accent"></div>
+
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumb">
+          <span class="breadcrumb-root">Admin</span>
+          <span class="breadcrumb-sep">›</span>
+          <span class="breadcrumb-current">Clubs & Terrains</span>
+        </div>
+        <h1 class="page-title">Gestion des Clubs</h1>
+      </div>
+      <button class="btn-add" (click)="toggleForm()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path *ngIf="!showForm" d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path *ngIf="showForm"  d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        {{ showForm ? 'Annuler' : 'Ajouter un club' }}
+      </button>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <span class="kpi-icon">🏟️</span>
+        <div class="kpi-body">
+          <span class="kpi-value">{{ clubs.length }}</span>
+          <span class="kpi-label">Clubs</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">🎾</span>
+        <div class="kpi-body">
+          <span class="kpi-value">{{ totalTerrains }}</span>
+          <span class="kpi-label">Terrains total</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">💰</span>
+        <div class="kpi-body">
+          <span class="kpi-value">{{ avgPrix }} DT</span>
+          <span class="kpi-label">Prix moyen / h</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">🔍</span>
+        <div class="kpi-body">
+          <span class="kpi-value">{{ filteredClubs.length }}</span>
+          <span class="kpi-label">Résultats</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notif success" *ngIf="successMessage">
+      <span class="notif-dot success"></span>{{ successMessage }}
+    </div>
+    <div class="notif error" *ngIf="errorMessage">
+      <span class="notif-dot error"></span>{{ errorMessage }}
+    </div>
+
+    <!-- Add Form -->
+    <div class="form-drawer" [class.open]="showForm">
+      <div class="form-drawer-inner">
+        <div class="form-drawer-header">
+          <h2>Nouveau Club</h2>
+          <p>Remplissez les informations du terrain sportif</p>
+        </div>
+        <form [formGroup]="clubForm" (ngSubmit)="onSubmit()" novalidate class="add-form">
+          <div class="form-grid">
+
+            <div class="field span-2">
+              <label>Nom du club</label>
+              <input type="text" formControlName="nomClub" placeholder="Ex : Tennis Club Carthage"
+                     [class.err]="f['nomClub'].invalid && f['nomClub'].touched">
+              <span class="ferr" *ngIf="f['nomClub'].invalid && f['nomClub'].touched">Nom requis (min. 2 caractères)</span>
+            </div>
+
+            <div class="field">
+              <label>Ouverture</label>
+              <input type="time" formControlName="debutTravail"
+                     [class.err]="f['debutTravail'].invalid && f['debutTravail'].touched">
+              <span class="ferr" *ngIf="f['debutTravail'].invalid && f['debutTravail'].touched">Requis</span>
+            </div>
+
+            <div class="field">
+              <label>Fermeture</label>
+              <input type="time" formControlName="finTravail"
+                     [class.err]="f['finTravail'].invalid && f['finTravail'].touched">
+              <span class="ferr" *ngIf="f['finTravail'].invalid && f['finTravail'].touched">Requis</span>
+            </div>
+
+            <div class="field">
+              <label>Nb. de terrains</label>
+              <div class="input-icon-wrap">
+                <span class="iico">🎾</span>
+                <input type="number" formControlName="nombreTerrains" min="1"
+                       [class.err]="f['nombreTerrains'].invalid && f['nombreTerrains'].touched">
+              </div>
+              <span class="ferr" *ngIf="f['nombreTerrains'].invalid && f['nombreTerrains'].touched">Min. 1</span>
+            </div>
+
+            <div class="field">
+              <label>Prix / heure (DT)</label>
+              <div class="input-icon-wrap">
+                <span class="iico">DT</span>
+                <input type="number" formControlName="prix" min="0" step="0.5"
+                       [class.err]="f['prix'].invalid && f['prix'].touched">
+              </div>
+              <span class="ferr" *ngIf="f['prix'].invalid && f['prix'].touched">Invalide</span>
+            </div>
+
+          </div>
+          <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="toggleForm()">Annuler</button>
+            <button type="submit" class="btn-save" [disabled]="clubForm.invalid || isSubmitting">
+              <span class="spin" *ngIf="isSubmitting"></span>
+              {{ isSubmitting ? 'Enregistrement…' : 'Créer le club' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div class="table-panel">
+
+      <!-- Toolbar -->
+      <div class="table-toolbar">
+        <div class="search-wrap">
+          <svg class="search-ico" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="7" cy="7" r="4.5" stroke="#9CA3AF" stroke-width="1.5"/>
+            <path d="M10.5 10.5L13 13" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input class="search-input" type="text" placeholder="Rechercher un club, prix, terrains…"
+                 [value]="searchQuery" (input)="onSearch($any($event.target).value)">
+          <button class="search-clear" *ngIf="searchQuery" (click)="onSearch('')">✕</button>
+        </div>
+        <span class="result-count">
+          {{ filteredClubs.length }} / {{ clubs.length }} club{{ clubs.length !== 1 ? 's' : '' }}
+        </span>
+      </div>
+
+      <!-- Loading -->
+      <div class="table-loading" *ngIf="isLoading">
+        <div class="loader-bar"></div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-scroll" *ngIf="!isLoading">
+        <table class="data-table" *ngIf="filteredClubs.length > 0; else emptyTpl">
+          <thead>
+            <tr>
+              <th class="th-sort" (click)="setSort('nomClub')">
+                Nom du club
+                <span class="sort-arrow" [class.active]="sortField === 'nomClub'">
+                  {{ sortField === 'nomClub' ? (sortAsc ? '↑' : '↓') : '↕' }}
+                </span>
+              </th>
+              <th>Horaires</th>
+              <th class="th-sort th-center" (click)="setSort('nombreTerrains')">
+                Terrains
+                <span class="sort-arrow" [class.active]="sortField === 'nombreTerrains'">
+                  {{ sortField === 'nombreTerrains' ? (sortAsc ? '↑' : '↓') : '↕' }}
+                </span>
+              </th>
+              <th class="th-sort th-center" (click)="setSort('prix')">
+                Prix / h
+                <span class="sort-arrow" [class.active]="sortField === 'prix'">
+                  {{ sortField === 'prix' ? (sortAsc ? '↑' : '↓') : '↕' }}
+                </span>
+              </th>
+              <th class="th-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let club of filteredClubs" class="data-row">
+              <td class="td-name">
+                <div class="club-avatar-sm">{{ club.nomClub.charAt(0).toUpperCase() }}</div>
+                <div class="club-name-col">
+                  <span class="cname">{{ club.nomClub }}</span>
+                  <span class="cid">{{ club._id | slice:0:10 }}…</span>
+                </div>
+              </td>
+              <td class="td-horaires">
+                <span class="badge-time">
+                  <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#0ea37a" stroke-width="1.3" fill="none"/><path d="M6 3.5V6l1.5 1.5" stroke="#0ea37a" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  {{ club.debutTravail }} – {{ club.finTravail }}
+                </span>
+              </td>
+              <td class="td-center">
+                <span class="badge-terrains">{{ club.nombreTerrains }}</span>
+              </td>
+              <td class="td-center">
+                <span class="badge-prix">{{ club.prix }} DT</span>
+              </td>
+              <td class="td-center">
+                <button class="btn-del"
+                        [class.loading]="deletingId === club._id"
+                        (click)="deleteClub(club._id!, club.nomClub)"
+                        title="Supprimer">
+                  <span *ngIf="deletingId !== club._id">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5.5 6v4M8.5 6v4M3 3.5l.7 7.5h6.6L11 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="spin-sm" *ngIf="deletingId === club._id"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ng-template #emptyTpl>
+          <div class="empty-state">
+            <div class="empty-illo">🔍</div>
+            <p *ngIf="searchQuery">Aucun résultat pour <strong>"{{ searchQuery }}"</strong></p>
+            <p *ngIf="!searchQuery">Aucun club enregistré. Commencez par en créer un.</p>
+            <button *ngIf="searchQuery" class="btn-cancel" (click)="onSearch('')">Effacer la recherche</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+  </div>
+</div>

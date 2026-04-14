@@ -1,0 +1,115 @@
+<p>inscription works!</p>
+<!-- create-user.component.html -->
+<div class="create-user-container">
+  <div class="user-box">
+    <div class="header">
+      <h2>🌿 Créer un Utilisateur</h2>
+      <p class="subtitle">Nouveau membre de Yalla Padel</p>
+    </div>
+
+    <!-- Success Message -->
+    <div class="message success-message" *ngIf="successMessage">
+      <span class="icon">✓</span>
+      {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div class="message error-message" *ngIf="errorMessage">
+      <span class="icon">✗</span>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Prénom</label>
+          <input 
+            type="text" 
+            id="firstName" 
+            formControlName="firstName"
+            placeholder="John"
+            [class.invalid]="isFieldInvalid('firstName')">
+          <span class="error-text" *ngIf="isFieldInvalid('firstName')">
+            Le prénom est requis
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Nom</label>
+          <input 
+            type="text" 
+            id="lastName" 
+            formControlName="lastName"
+            placeholder="Doe"
+            [class.invalid]="isFieldInvalid('lastName')">
+          <span class="error-text" *ngIf="isFieldInvalid('lastName')">
+            Le nom est requis
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username"
+          placeholder="johndoe"
+          [class.invalid]="isFieldInvalid('username')">
+        <span class="error-text" *ngIf="isFieldInvalid('username')">
+          Minimum 3 caractères requis
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="john.doe@example.com"
+          [class.invalid]="isFieldInvalid('email')">
+        <span class="error-text" *ngIf="isFieldInvalid('email')">
+          Email valide requis
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="password-wrapper">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password"
+            placeholder="••••••••"
+            [class.invalid]="isFieldInvalid('password')">
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePasswordVisibility()">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <span class="error-text" *ngIf="isFieldInvalid('password')">
+          Minimum 8 caractères requis
+        </span>
+      </div>
+
+      <div class="role-info">
+        <span class="role-badge">👤 Rôle: USER</span>
+        <span class="role-description">Rôle par défaut attribué automatiquement</span>
+      </div>
+
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="loading">
+        <span class="btn-text" *ngIf="!loading">Créer l'utilisateur</span>
+        <span class="btn-loader" *ngIf="loading">
+          <span class="spinner"></span>
+          Création en cours...
+        </span>
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,553 @@
+// ============================================
+// DESIGN SYSTEM — PADEL PRICING
+// Direction : Luxury Sport / Refined Green
+// ============================================
+
+$padel-primary:       #1a472a;
+$padel-primary-light: #2d6a42;
+$padel-primary-dark:  #0f2d19;
+$padel-accent:        #4caf50;
+$padel-accent-light:  #81c784;
+$padel-accent-alt:    #c45c1a;
+$padel-secondary:     #f1f8f4;
+$padel-gold:          #c9a84c;
+
+$shadow-soft:   0 4px 24px rgba(26, 71, 42, 0.07);
+$shadow-medium: 0 8px 40px rgba(26, 71, 42, 0.13);
+$shadow-strong: 0 20px 60px rgba(26, 71, 42, 0.20);
+$shadow-glow:   0 0 50px rgba(76, 175, 80, 0.20);
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmerSlide {
+  from { left: -100%; }
+  to   { left: 200%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: $shadow-strong, 0 0 0 0 rgba(76, 175, 80, 0); }
+  50%       { box-shadow: $shadow-strong, 0 0 30px 8px rgba(76, 175, 80, 0.15); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes lineGrow {
+  from { width: 0; opacity: 0; }
+  to   { width: 56px; opacity: 1; }
+}
+
+// ============================================
+// SECTION WRAPPER
+// ============================================
+
+.pricing-section {
+  background: linear-gradient(160deg, #f8fdf9 0%, #ffffff 40%, #f1f8f4 100%);
+  width: 100%;
+  padding: 80px 0 160px;
+  position: relative;
+  overflow: hidden;
+
+  // Cercles décoratifs en fond
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    width: 600px;
+    height: 600px;
+    top: -200px;
+    right: -200px;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.06) 0%, transparent 70%);
+  }
+
+  &::after {
+    width: 400px;
+    height: 400px;
+    bottom: 0;
+    left: -100px;
+    background: radial-gradient(circle, rgba(26, 71, 42, 0.05) 0%, transparent 70%);
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.pricing-header {
+  margin-bottom: 56px;
+}
+
+.pricing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(26, 71, 42, 0.08));
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: $padel-primary;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+.pricing-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: $padel-primary-dark;
+  line-height: 1.2;
+  margin: 0 0 16px;
+
+  &__highlight {
+    background: linear-gradient(
+      135deg,
+      $padel-primary,
+      $padel-accent,
+      $padel-accent-alt
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease infinite;
+  }
+}
+
+.pricing-subtitle {
+  font-size: 17px;
+  color: #5a6a61;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+// ============================================
+// GRID
+// ============================================
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
+  padding: 8px 0 40px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+// ============================================
+// PRICING CARD
+// ============================================
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid rgba(76, 175, 80, 0.15);
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  text-align: center;
+  transition:
+    transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  box-shadow: $shadow-soft;
+  animation: fadeInUp 0.6s ease both;
+  width: 100%;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-medium;
+    border-color: rgba(76, 175, 80, 0.35);
+  }
+
+  // ── Carte featured (populaire) ──
+  &--featured {
+    background: linear-gradient(160deg, $padel-primary 0%, $padel-primary-light 100%);
+    border-color: $padel-accent;
+    border-width: 2px;
+    box-shadow: $shadow-strong;
+    animation: pulse-glow 3s ease-in-out infinite;
+    z-index: 2;
+
+    @media (min-width: 640px) {
+      transform: translateY(-16px) scale(1.03);
+
+      &:hover {
+        transform: translateY(-24px) scale(1.04);
+        box-shadow: $shadow-strong, $shadow-glow;
+      }
+    }
+
+    .pricing-card__name  { color: #ffffff; }
+    .pricing-card__desc  { color: rgba(255, 255, 255, 0.7); }
+    .pricing-card__price { color: #ffffff; }
+    .pricing-card__currency,
+    .pricing-card__period { color: rgba(255, 255, 255, 0.75); }
+
+    .pricing-card__feature { color: rgba(255, 255, 255, 0.85); }
+
+    .pricing-card__check {
+      background: rgba(255, 255, 255, 0.2);
+      svg { stroke: #ffffff; }
+    }
+  }
+
+  // Badge "populaire"
+  &__popular {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, $padel-accent, $padel-accent-light);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 18px;
+    border-radius: 50px;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+    letter-spacing: 0.03em;
+  }
+
+  // Icône emoji
+  &__icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: $shadow-soft;
+  }
+
+  &__emoji {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  // Nom
+  &__name {
+    font-size: 20px;
+    font-weight: 800;
+    color: $padel-primary-dark;
+    margin: 0 0 6px;
+  }
+
+  // Description courte
+  &__desc {
+    font-size: 13px;
+    color: #7a8c81;
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  // Prix
+  &__price-wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 24px;
+    padding: 12px 20px;
+    background: rgba(241, 248, 244, 0.6);
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  &--featured &__price-wrap {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &__currency {
+    font-size: 16px;
+    font-weight: 700;
+    color: $padel-primary;
+  }
+
+  &__price {
+    font-size: 38px;
+    font-weight: 800;
+    color: $padel-primary-dark;
+    line-height: 1;
+  }
+
+  &__period {
+    font-size: 14px;
+    color: #7a8c81;
+    font-weight: 500;
+  }
+
+  // Features liste
+  &__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+    width: 100%;
+    text-align: left;
+  }
+
+  &__feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #4a5e52;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.08);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__check {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(76, 175, 80, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 13px;
+      height: 13px;
+      stroke: $padel-accent;
+    }
+  }
+
+  // Bouton
+  &__btn {
+    width: 100%;
+    padding: 13px 24px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition:
+      transform 0.22s cubic-bezier(0.23, 1, 0.32, 1),
+      box-shadow 0.22s ease,
+      background-position 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid rgba(26, 71, 42, 0.3);
+    background: transparent;
+    color: $padel-primary;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-18deg);
+    }
+
+    &:hover {
+      background: $padel-secondary;
+      border-color: $padel-accent;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 71, 42, 0.15);
+
+      &::after { animation: shimmerSlide 0.55s ease forwards; }
+    }
+
+    // Bouton featured (blanc sur vert)
+    &--featured {
+      background: linear-gradient(135deg, $padel-accent, $padel-accent-light);
+      background-size: 200% auto;
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 6px 24px rgba(76, 175, 80, 0.4);
+
+      &:hover {
+        background-position: right center;
+        background: $padel-accent-light;
+        color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 32px rgba(76, 175, 80, 0.5);
+      }
+    }
+  }
+
+  // Animation stagger
+  @for $i from 1 through 3 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 150}ms;
+    }
+  }
+}
+
+// ============================================
+// SUBSCRIBE BOX
+// ============================================
+
+.subscribe-wrap {
+  position: relative;
+  width: 100%;
+  margin-top: 48px;
+  padding-bottom: 80px;
+}
+
+.subscribe-box {
+  position: relative;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  box-shadow: $shadow-strong;
+  border: 1.5px solid rgba(76, 175, 80, 0.15);
+  z-index: 10;
+  text-align: left;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__text {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: $padel-primary-dark;
+    line-height: 1.3;
+    margin: 0 0 8px;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: #7a8c81;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 32px;
+    background: linear-gradient(135deg, $padel-primary, $padel-primary-light, $padel-accent);
+    background-size: 200% auto;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+    transition:
+      background-position 0.4s ease,
+      transform 0.25s cubic-bezier(0.23, 1, 0.32, 1),
+      box-shadow 0.25s ease;
+    box-shadow: 0 6px 24px rgba(26, 71, 42, 0.3);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: skewX(-18deg);
+    }
+
+    &:hover {
+      background-position: right center;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 36px rgba(26, 71, 42, 0.38);
+
+      &::after { animation: shimmerSlide 0.55s ease forwards; }
+
+      svg { transform: translateX(4px); }
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.25s ease;
+    }
+  }
+
+  // Ombre décorative sous la box
+  &__shadow {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 60px;
+    background: rgba(26, 71, 42, 0.06);
+    border-radius: 50%;
+    filter: blur(20px);
+    z-index: 1;
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 640px) {
+  .pricing-section {
+    padding: 60px 0 120px;
+  }
+
+  .pricing-card {
+    padding: 28px 20px 24px;
+
+    &__price { font-size: 32px; }
+    &__name  { font-size: 18px; }
+  }
+
+  .subscribe-box {
+    padding: 28px 24px;
+    text-align: center;
+
+    &__text { width: 100%; }
+
+    &__btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

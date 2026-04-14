@@ -1,0 +1,114 @@
+<form class="ef-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+  <div class="ef-form__body">
+
+    <!-- Titre -->
+    <div class="ef-field">
+      <label class="ef-label" for="ef-title">Titre <span class="ef-required">*</span></label>
+      <input id="ef-title" class="ef-input" [class.ef-input--error]="fieldInvalid('title')"
+             type="text" formControlName="title" placeholder="Ex: Tournoi Open de Padel"/>
+      <span class="ef-error" *ngIf="fieldInvalid('title')">
+        Le titre est requis (minimum 3 caractères).
+      </span>
+    </div>
+
+    <!-- Description -->
+    <div class="ef-field">
+      <label class="ef-label" for="ef-desc">Description</label>
+      <textarea id="ef-desc" class="ef-input ef-textarea"
+                formControlName="description"
+                placeholder="Décrivez l'événement…" rows="3"></textarea>
+    </div>
+
+    <!-- Dates (ligne) -->
+    <div class="ef-row">
+      <div class="ef-field">
+        <label class="ef-label" for="ef-start">Date de début <span class="ef-required">*</span></label>
+        <input id="ef-start" class="ef-input" [class.ef-input--error]="fieldInvalid('startTime')"
+               type="datetime-local" formControlName="startTime"/>
+        <span class="ef-error" *ngIf="fieldInvalid('startTime')">Requis.</span>
+      </div>
+      <div class="ef-field">
+        <label class="ef-label" for="ef-end">Date de fin <span class="ef-required">*</span></label>
+        <input id="ef-end" class="ef-input" [class.ef-input--error]="fieldInvalid('endTime') || form.hasError('dateRange')"
+               type="datetime-local" formControlName="endTime"/>
+        <span class="ef-error" *ngIf="form.hasError('dateRange') && form.touched">
+          La date de fin doit être après la date de début.
+        </span>
+      </div>
+    </div>
+
+    <!-- Lieu + Capacité (ligne) -->
+    <div class="ef-row">
+      <div class="ef-field">
+        <label class="ef-label" for="ef-location">Lieu</label>
+        <input id="ef-location" class="ef-input" type="text"
+               formControlName="location" placeholder="Ex: Court Central, Tunis"/>
+      </div>
+      <div class="ef-field ef-field--sm">
+        <label class="ef-label" for="ef-capacity">Capacité <span class="ef-required">*</span></label>
+        <input id="ef-capacity" class="ef-input" [class.ef-input--error]="fieldInvalid('capacity')"
+               type="number" formControlName="capacity" min="1"/>
+        <span class="ef-error" *ngIf="fieldInvalid('capacity')">Minimum 1.</span>
+      </div>
+    </div>
+
+    <!-- Niveau -->
+    <div class="ef-field">
+      <label class="ef-label" for="ef-level">Niveau <span class="ef-required">*</span></label>
+      <select id="ef-level" class="ef-select" formControlName="level">
+        <option *ngFor="let lvl of levels" [value]="lvl.value">{{ lvl.label }}</option>
+      </select>
+    </div>
+
+    <!-- Image -->
+    <div class="ef-field">
+      <label class="ef-label">Image de l'événement</label>
+      <div class="ef-image-zone" *ngIf="!imagePreview">
+        <label for="ef-file" class="ef-image-zone__label">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>Cliquer pour choisir une image</span>
+          <span class="ef-image-zone__hint">JPG, PNG — max 5 Mo (compressée automatiquement)</span>
+        </label>
+        <input id="ef-file" type="file" accept="image/*" (change)="onFileSelected($event)" hidden/>
+      </div>
+      <div class="ef-image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Aperçu" class="ef-image-preview__img"/>
+        <button type="button" class="ef-image-preview__remove" (click)="removeImage()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Supprimer l'image
+        </button>
+      </div>
+    </div>
+
+    <!-- Rappel envoyé -->
+    <div class="ef-field ef-field--checkbox">
+      <label class="ef-checkbox-label">
+        <input type="checkbox" formControlName="reminderSent" class="ef-checkbox"/>
+        <span>Rappel déjà envoyé aux participants</span>
+      </label>
+    </div>
+
+    <!-- Erreur globale -->
+    <div class="ef-alert ef-alert--error" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+  </div><!-- /.ef-form__body -->
+
+  <!-- Footer du formulaire -->
+  <div class="ef-form__footer">
+    <button type="button" class="btn btn--cancel" (click)="cancel()">Annuler</button>
+    <button type="submit" class="btn btn--submit" id="ef-submit" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="ef-spinner"></span>
+      {{ isSubmitting ? 'Enregistrement…' : (editingId ? 'Mettre à jour' : 'Créer l\'événement') }}
+    </button>
+  </div>
+
+</form>

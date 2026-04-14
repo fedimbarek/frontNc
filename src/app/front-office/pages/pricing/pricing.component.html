@@ -1,0 +1,99 @@
+<div class="pricing-section" id="pricing">
+  <div class="max-w-screen-xl px-6 sm:px-8 lg:px-16 mx-auto flex flex-col w-full text-center">
+
+    <!-- ── TITRE ── -->
+    <app-scroll-animation>
+      <div class="pricing-header">
+        <div class="pricing-badge">🎾 Nos Offres</div>
+        <h3 class="pricing-title">
+          Choisissez votre
+          <span class="pricing-title__highlight">formule</span>
+        </h3>
+        <p class="pricing-subtitle">
+          Des formules adaptées à tous les niveaux — du joueur occasionnel au passionné confirmé.
+        </p>
+      </div>
+    </app-scroll-animation>
+
+    <!-- ── PLANS ── -->
+    <div class="pricing-grid">
+      <app-scroll-animation
+        *ngFor="let plan of plans; let i = index"
+        className="flex justify-center"
+      >
+        <div
+          class="pricing-card"
+          [class.pricing-card--featured]="plan.featured"
+        >
+          <!-- Badge populaire -->
+          <div *ngIf="plan.featured" class="pricing-card__popular">
+            ⭐ Le plus populaire
+          </div>
+
+          <!-- Icône -->
+          <div class="pricing-card__icon" [style.background]="plan.iconBg">
+            <span class="pricing-card__emoji">{{ plan.emoji }}</span>
+          </div>
+
+          <!-- Nom du plan -->
+          <h4 class="pricing-card__name">{{ plan.name }}</h4>
+          <p class="pricing-card__desc">{{ plan.desc }}</p>
+
+          <!-- Prix -->
+          <div class="pricing-card__price-wrap">
+            <span class="pricing-card__currency" *ngIf="plan.price !== 'Gratuit'">DT</span>
+            <span class="pricing-card__price">{{ plan.price }}</span>
+            <span class="pricing-card__period" *ngIf="plan.period">/ {{ plan.period }}</span>
+          </div>
+
+          <!-- Features -->
+          <ul class="pricing-card__features">
+            <li *ngFor="let feature of plan.features" class="pricing-card__feature">
+              <span class="pricing-card__check">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </span>
+              {{ feature }}
+            </li>
+          </ul>
+
+          <!-- CTA -->
+          <button
+            routerLink="/reservation"
+            class="pricing-card__btn"
+            [class.pricing-card__btn--featured]="plan.featured"
+          >
+            {{ plan.cta }}
+          </button>
+
+        </div>
+      </app-scroll-animation>
+    </div>
+
+    <!-- ── SUBSCRIBE BOX ── -->
+    <div class="subscribe-wrap">
+      <app-scroll-animation>
+        <div class="subscribe-box">
+          <div class="subscribe-box__text">
+            <h5 class="subscribe-box__title">
+              Prêt à jouer ? <br />Réservez votre terrain maintenant !
+            </h5>
+            <p class="subscribe-box__desc">
+              Disponible 7j/7 — Réservation en 2 minutes — Paiement sécurisé
+            </p>
+          </div>
+          <button routerLink="/reservation" class="subscribe-box__btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Réserver maintenant
+          </button>
+        </div>
+        <div class="subscribe-box__shadow"></div>
+      </app-scroll-animation>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<section class="gt-page">
+  <header class="gt-header">
+    <div>
+      <h1>Gestion des tournois</h1>
+      <p>{{ tournois.length }} tournoi(s) enregistrés</p>
+    </div>
+    <button type="button" class="gt-btn gt-btn--primary" (click)="openCreateForm()">Nouveau tournoi</button>
+  </header>
+
+  <div class="gt-alert gt-alert--success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="gt-alert gt-alert--error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="gt-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="gt-modal" (click)="$event.stopPropagation()">
+      <div class="gt-modal__header">
+        <h2>{{ editingId ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h2>
+        <button type="button" class="gt-modal__close" (click)="closeForm()">×</button>
+      </div>
+      <app-tournoi-form [editingId]="editingId" (saved)="onSaved()" (cancelled)="closeForm()"></app-tournoi-form>
+    </div>
+  </div>
+
+  <div class="gt-loading" *ngIf="isLoading">Chargement...</div>
+
+  <div class="gt-empty" *ngIf="!isLoading && tournois.length === 0">Aucun tournoi disponible.</div>
+
+  <div class="gt-grid" *ngIf="!isLoading && tournois.length > 0">
+    <article class="gt-card" *ngFor="let tournoi of tournois">
+      <div class="gt-card__top">
+        <span class="gt-badge">{{ getStatusLabel(tournoi.statut) }}</span>
+        <strong>{{ tournoi.prixInscription || 0 }} DT</strong>
+      </div>
+
+      <h2>{{ tournoi.nom }}</h2>
+      <p>{{ tournoi.description || 'Aucune description.' }}</p>
+
+      <dl class="gt-meta">
+        <div><dt>Début</dt><dd>{{ formatDate(tournoi.dateDebut) }}</dd></div>
+        <div><dt>Fin</dt><dd>{{ formatDate(tournoi.dateFin) }}</dd></div>
+        <div><dt>Lieu</dt><dd>{{ tournoi.lieu }}</dd></div>
+        <div><dt>Participants</dt><dd>{{ tournoi.nbParticipants || (tournoi.participantIds || []).length }} / {{ tournoi.capaciteMax }}</dd></div>
+        <div><dt>Gagnant</dt><dd>{{ getWinnerLabel(tournoi) }}</dd></div>
+      </dl>
+
+      <div class="gt-winner">
+        <select
+          [(ngModel)]="selectedWinnerByTournoi[tournoi.id!]"
+          [disabled]="isParticipantsLoading(tournoi) || getParticipants(tournoi).length === 0">
+          <option value="">{{ isParticipantsLoading(tournoi) ? 'Chargement...' : 'Choisir un participant' }}</option>
+          <option *ngFor="let participant of getParticipants(tournoi)" [value]="participant.id">
+            {{ getDisplayName(participant) }}{{ participant.email ? ' - ' + participant.email : '' }}
+          </option>
+        </select>
+        <button
+          type="button"
+          class="gt-btn"
+          [disabled]="assigningWinnerForId === tournoi.id || isParticipantsLoading(tournoi) || getParticipants(tournoi).length === 0"
+          (click)="assignWinner(tournoi)">
+          {{ assigningWinnerForId === tournoi.id ? '...' : 'Désigner gagnant' }}
+        </button>
+      </div>
+
+      <p class="gt-hint" *ngIf="!isParticipantsLoading(tournoi) && getParticipants(tournoi).length === 0">
+        Aucun participant chargé pour ce tournoi.
+      </p>
+
+      <div class="gt-actions">
+        <button type="button" class="gt-btn gt-btn--secondary" (click)="openEditForm(tournoi)">Modifier</button>
+        <button type="button" class="gt-btn gt-btn--danger" (click)="deleteTournoi(tournoi.id!)">Supprimer</button>
+      </div>
+    </article>
+  </div>
+</section>

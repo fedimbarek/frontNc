@@ -1,0 +1,50 @@
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 style="font-weight: 800; font-size: 2.5rem;">User Management</h1>
+  </div>
+
+
+
+  <div class="jungle-card p-0 overflow-hidden">
+    <div
+      class="px-4 py-3 border-bottom border-secondary border-opacity-10 d-flex justify-content-between align-items-center"
+      style="background: rgba(255,255,255,0.02);">
+      <h5 class="mb-0 fw-bold">All Registered Users</h5>
+      <span class="badge bg-secondary opacity-75">{{ users.length }} Total</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent;">
+        <thead class="text-secondary small fw-bold">
+          <tr>
+            <th class="px-4 py-3">NAME</th>
+            <th class="px-4 py-3">EMAIL</th>
+            <th class="px-4 py-3">ROLE</th>
+            <th class="px-4 py-3">KEYCLOAK ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users" style="cursor: pointer;">
+            <td class="px-4 py-3 opacity-75">#{{ u.id }}</td>
+            <td class="px-4 py-3 fw-bold">{{ u.name }}</td>
+            <td class="px-4 py-3 opacity-75">{{ u.email }}</td>
+            <td class="px-4 py-3">
+              <span class="badge" [ngStyle]="{'background': u.role === 'ADMIN' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', 'color': u.role === 'ADMIN' ? '#ef4444' : '#10b981'}">
+                {{ u.role }}
+              </span>
+            </td>
+            <td class="px-4 py-3 opacity-75 text-truncate" style="max-width: 150px;" title="{{ u.keycloakUserId }}">
+              {{ u.keycloakUserId || 'Not Mapped' }}
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="5" class="text-center py-5 opacity-50">
+              <i class="fas fa-users mb-3 d-block fs-3"></i>
+              No users mapped yet
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
